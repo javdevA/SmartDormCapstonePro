@@ -166,3 +166,9 @@ timestamp,level,message
 2026-01-19T01:02:16,STUDENT,s1001 viewed roommates
 2026-01-19T01:02:25,STUDENT,s1001 viewed dashboard
 2026-01-19T01:02:31,STUDENT,s1001 viewed dashboard
+2026-01-19T01:09:24,ADMIN,Deleted student ID: 10191 (count: 21→20)
+2026-01-19T01:09:32,ADMIN,Ran simulation: 100 trials
+2026-01-19T01:09:39,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-19T01:09:41,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-19T01:09:49,ADMIN,Deleted dorm: D6
+2026-01-19T01:10:00,ADMIN,Viewed charts dashboard

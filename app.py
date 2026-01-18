@@ -837,6 +837,88 @@ def student_roommates():
                          dorm_mates=dorm_mates,
                          student_id=student_id)
 
+# ROOM CHANGE REQUESTS SYSTEM
+ROOM_REQUESTS_FILE = DATA_DIR / "room_requests.csv"
+
+@app.route("/student/room-change", methods=["GET", "POST"])
+@student_login_required
+def student_room_change():
+    student_id = session['student_logged_in']
+    students = load_students()
+    requests = []
+    
+    # Load existing requests
+    if ROOM_REQUESTS_FILE.exists():
+        try:
+            requests = read_csv(ROOM_REQUESTS_FILE)
+        except:
+            requests = []
+    
+    if request.method == "POST":
+        import time
+        timestamp = time.strftime("%Y-%m-%d %H:%M")
+        
+        # Find current assignment
+        allocation = {}
+        if ALLOC_FILE.exists():
+            try:
+                allocations = read_csv(ALLOC_FILE)
+                allocation = {a["student_id"]: a["dorm_id"] for a in allocations}
+            except:
+                pass
+        
+        current_dorm = allocation.get(student_id, "None")
+        new_dorm = request.form.get("new_dorm", "")
+        reason = request.form.get("reason", "")
+        
+        new_request = {
+            "id": f"R{len(requests) + 1:03d}",
+            "student_id": student_id,
+            "current_dorm": current_dorm,
+            "new_dorm": new_dorm,
+            "reason": reason[:200],
+            "status": "Pending",
+            "timestamp": timestamp
+        }
+        
+        requests.append(new_request)
+        write_csv(ROOM_REQUESTS_FILE, requests, ["id", "student_id", "current_dorm", "new_dorm", "reason", "status", "timestamp"])
+        
+        flash(f"✅ Room change request R{new_request['id']} submitted!", "success")
+        log_event("STUDENT", f"{student_id} submitted room change request")
+        return redirect(url_for("student_room_change"))
+    
+    # Get dorm options
+    dorms = load_dorms()
+    allocation = {}
+    if ALLOC_FILE.exists():
+        try:
+            allocations = read_csv(ALLOC_FILE)
+            allocation = {a["student_id"]: a["dorm_id"] for a in allocations}
+        except:
+            pass
+    
+    current_dorm = allocation.get(student_id)
+    my_student = next((s for s in students if s.get("student_id") == student_id), None)
+    
+    return render_template("student_room_change.html", 
+                         dorms=dorms, 
+                         current_dorm=current_dorm,
+                         student=my_student,
+                         requests=[r for r in requests if r["student_id"] == student_id])
+
+@app.route("/admin/room-requests")
+@login_required
+def admin_room_requests():
+    requests = []
+    if ROOM_REQUESTS_FILE.exists():
+        try:
+            requests = read_csv(ROOM_REQUESTS_FILE)
+        except:
+            requests = []
+    
+    return render_template("admin_room_requests.html", requests=requests)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -36,13 +36,13 @@
         </div>
     </div>
 
-    <!-- STUDENT-SPECIFIC ACTIONS (NEW!) -->
-<div class="quick-actions">
+    <div class="quick-actions">
     <a href="{{ url_for('student_maintenance') }}" class="btn-primary">🔧 Report Issue</a>
     <a href="{{ url_for('student_assignment_pdf') }}" class="btn-primary">📄 My Assignment</a>
     <a href="{{ url_for('student_roommates') }}" class="btn-primary">🤝 My Roommates</a>
-    <a href="{{ url_for('student_logout') }}" class="btn-primary" style="background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.3);">🚪 Logout</a>
-</div>
+    <a href="{{ url_for('student_room_change') }}" class="btn-primary">🔄 Room Change</a>
+    <a href="{{ url_for('student_logout') }}" class="btn-primary" style="background: rgba(239,68,68,0.2);">🚪 Logout</a>
+    </div>
 
 </div>
 {% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto; padding: 2rem;">
+    <h1 style="text-align: center;">🔄 Room Change Request</h1>
+    
+    <div class="chart-container" style="margin-bottom: 2rem;">
+        <form method="post">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Current Dorm:</label>
+                <input type="text" value="{{ current_dorm or 'None' }}" readonly style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.1); border-radius: 12px;">
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Request New Dorm:</label>
+                <select name="new_dorm" style="width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.1); border-radius: 12px; font-size: 1rem;" required>
+                    <option value="">Select dorm...</option>
+                    {% for dorm in dorms %}
+                    <option value="{{ dorm.dorm_id }}">{{ dorm.name }} ({{ dorm.capacity }} beds)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Reason (max 200 chars):</label>
+                <textarea name="reason" maxlength="200" style="width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.1); border-radius: 12px; font-size: 1rem; min-height: 100px;" placeholder="Explain why you need a room change..." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-primary" style="width: 100%;">Submit Request</button>
+        </form>
+    </div>
+    
+    <a href="{{ url_for('student_dashboard') }}" class="btn-primary">← Dashboard</a>
+</div>
+{% endblock %}

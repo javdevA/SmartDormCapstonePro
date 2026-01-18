@@ -18,6 +18,7 @@
     <a href="{{ url_for('roommates') }}">🤝 Roommates</a> |
     <a href="{{ url_for('maintenance') }}">🔧 Maintenance</a> |
     <a href="{{ url_for('waitlist') }}">⏳ Waitlist</a> |
+    <a href="{{ url_for('admin_room_requests') }}">🔄 Room Requests</a> |
     <a href="{{ url_for('pdf_report') }}">📄 Reports</a> |
     <a href="{{ url_for('run_allocation') }}">🚀 Allocate</a> |
     <a href="{{ url_for('compare_strategies') }}">⚡ Compare</a> |
@@ -58,4 +59,27 @@
     <p>© 2026 Smart Dorm Allocation System | Enterprise Edition v3.0</p>
 </footer>
 </body>
+
+<!-- THEME TOGGLE -->
+<div class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</div>
+
+<script>
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    const toggleBtn = document.querySelector('.theme-toggle');
+    toggleBtn.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Load saved theme on startup
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.body.setAttribute('data-theme', savedTheme);
+document.querySelector('.theme-toggle').textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+</script>
+
 </html>
