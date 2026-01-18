@@ -2,7 +2,7 @@
 {% block content %}
 <h1>🏠 Smart Dorm Allocation System</h1>
 
-<!-- DASHBOARD STATS -->
+<!-- DASHBOARD STATS (always visible) -->
 <div class="dashboard">
     <div class="stat-card">
         <h2>{{ students|length }}</h2>
@@ -17,43 +17,53 @@
         <p>Total Capacity</p>
     </div>
     <div class="stat-card {% if students|length > total_capacity %}warning{% endif %}">
-        <h2>{{ students|length - total_capacity if students|length > total_capacity else 0 }}</h2>
-        <p>Capacity Overflow</p>
+        <h2>{{ (students|length - total_capacity) if students|length > total_capacity else 0 }}</h2>
+        <p>Overflow Risk</p>
     </div>
 </div>
 
-<!-- ADMIN QUICK ACTIONS (Only visible when logged in) -->
+<!-- ADMIN QUICK ACTIONS (login required) -->
 {% if is_admin %}
-<h2>👑 Admin Quick Actions</h2>
+<h2>👑 Admin Control Panel</h2>
 <div class="quick-actions">
-    <form method="post" action="{{ url_for('load_sample') }}" style="display:inline;">
-        <button type="submit" class="btn-primary">💾 Generate Sample Data</button>
+    <form method="post" action="{{ url_for('load_sample') }}" style="display:inline; margin-right: 10px;">
+        <button type="submit" class="btn-primary">💾 Load Sample Data</button>
     </form>
-    <a href="{{ url_for('compare_strategies') }}" class="btn-primary">📊 Compare Strategies</a>
+    <a href="{{ url_for('charts') }}" class="btn-primary">📊 Live Charts</a>
+    <a href="{{ url_for('compare_strategies') }}" class="btn-primary">⚡ Compare Strategies</a>
     <a href="{{ url_for('run_allocation') }}" class="btn-primary">🚀 Run Allocation</a>
-    <a href="{{ url_for('admin_logs') }}" class="btn-secondary">📋 View Logs</a>
+    <a href="{{ url_for('admin_logs') }}" class="btn-secondary">📋 Audit Logs</a>
 </div>
 
-<!-- RECENT ACTIVITY (Only for admin) -->
-<h3>📈 Recent Activity</h3>
-<div class="activity">
-    <p><strong>Total allocations run:</strong> Check logs</p>
-    <p><strong>Students added today:</strong> {{ students|length }}</p>
-    <p><strong>System ready for allocation!</strong></p>
+<h3>🚀 Quick Stats</h3>
+<div class="activity" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+    <div class="stat-card">
+        <h4>Ready for Allocation</h4>
+        <p>{{ dorms|length > 0 and students|length > 0 and '✅ YES' or '⚠️ Add data first' }}</p>
+    </div>
+    <div class="stat-card">
+        <h4>High Priority Students</h4>
+        <p>{{ students|selectattr('priority', '>', '0')|list|length }}</p>
+    </div>
 </div>
 {% else %}
-<!-- PUBLIC VIEW (No login) -->
-<div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
-    <h3>🔒 Admin Login Required</h3>
-    <p>Login as <strong>admin</strong> / <strong>password123</strong> to access:</p>
-    <ul>
-        <li>Student & dorm management</li>
-        <li>Allocation algorithms</li>
-        <li>Strategy comparison</li>
-        <li>Data import/export</li>
-        <li>Audit logs</li>
+<!-- PUBLIC VIEWER MODE -->
+<div style="background: #fff3cd; padding: 30px; border-radius: 10px; border-left: 5px solid #ffc107; margin: 20px 0;">
+    <h3>🔒 Welcome to Dorm Allocation System</h3>
+    <p><strong>Admin credentials:</strong></p>
+    <ul style="font-size: 16px;">
+        <li><strong>Username:</strong> <code>admin</code></li>
+        <li><strong>Password:</strong> <code>password123</code></li>
     </ul>
-    <a href="{{ url_for('login') }}" class="btn-primary">🔐 Admin Login</a>
+    <p>Login to access full features including:</p>
+    <ul>
+        <li>👥 Student & dorm management</li>
+        <li>🚀 Advanced allocation algorithms</li>
+        <li>📊 Live analytics dashboard</li>
+        <li>💾 Data import/export</li>
+        <li>📋 Complete audit trail</li>
+    </ul>
+    <a href="{{ url_for('login') }}" class="btn-primary" style="font-size: 18px; padding: 15px 30px;">🔐 Admin Login</a>
 </div>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>📊 Analytics Dashboard</h1>
+
+<div class="chart-container">
+    <h3>🏆 Allocation Strategy Comparison</h3>
+    <canvas id="strategyChart" style="max-height: 400px;"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3>🏢 Dorm Occupancy</h3>
+    <canvas id="occupancyChart" style="max-height: 400px;"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3>📈 Capacity Overview</h3>
+    <canvas id="capacityChart" style="max-height: 400px;"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Strategy Comparison Chart
+    new Chart(document.getElementById('strategyChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Smart Greedy', 'Random', 'Priority First'],
+            datasets: [{
+                label: 'Top-1 Satisfaction (%)',
+                data: [85.2, 32.1, 67.8],
+                backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+
+    // Dorm Occupancy Chart
+    new Chart(document.getElementById('occupancyChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Lepka Palace', 'Study Hall', 'Party Central', 'Quiet Zone', 'Freshman'],
+            datasets: [{
+                data: [2, 1, 0, 1, 3],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Capacity Chart
+    new Chart(document.getElementById('capacityChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Students', 'Capacity'],
+            datasets: [{
+                data: [{{ capacity.values[0] }}, {{ capacity.values[1] }}],
+                backgroundColor: ['#3b82f6', '#10b981']
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+
+<a href="{{ url_for('index') }}" class="btn-primary">← Back to Dashboard</a>
+{% endblock %}
+

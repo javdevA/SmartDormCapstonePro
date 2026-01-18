@@ -1,0 +1,21 @@
+timestamp,level,message
+2026-01-18T17:18:44,ADMIN,Compared allocation strategies
+2026-01-18T17:18:46,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:22:04,ADMIN,Viewed live charts dashboard
+2026-01-18T17:25:29,ADMIN,Viewed live charts dashboard
+2026-01-18T17:25:43,ADMIN,Viewed live charts dashboard
+2026-01-18T17:27:17,ADMIN,Viewed charts dashboard
+2026-01-18T17:27:36,ADMIN,Viewed charts dashboard
+2026-01-18T17:27:40,ADMIN,"Loaded sample data: 20 students, 5 dorms"
+2026-01-18T17:27:40,ADMIN,Viewed charts dashboard
+2026-01-18T17:27:42,ADMIN,Compared allocation strategies
+2026-01-18T17:27:44,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:27:51,ADMIN,Viewed charts dashboard
+2026-01-18T17:29:34,ADMIN,Viewed charts dashboard
+2026-01-18T17:29:58,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:30:02,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:30:02,ADMIN,Compared allocation strategies
+2026-01-18T17:30:03,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:30:04,ADMIN,Viewed charts dashboard
+2026-01-18T17:30:06,ADMIN,Compared allocation strategies
+2026-01-18T17:30:09,ADMIN,Ran simulation: 100 trials
