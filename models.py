@@ -150,3 +150,66 @@ def priority_allocation(students, dorms):
     sorted_students = sorted(students, key=lambda s: int(s.get('priority', 0)), reverse=True)
     return greedy_allocation(sorted_students, dorms, randomize_order=False)
 
+def roommate_compatibility(student1, student2):
+    """AI-style roommate matching score (0-100)"""
+    score = 50  # Baseline compatibility
+    
+    # Same year = big bonus (+25 points)
+    year1 = int(student1.get("year", 1))
+    year2 = int(student2.get("year", 1))
+    if year1 == year2:
+        score += 25
+    
+    # Priority balance (+15 if similar priority levels)
+    p1 = int(student1.get("priority", 0))
+    p2 = int(student2.get("priority", 0))
+    if abs(p1 - p2) <= 1:
+        score += 15
+    
+    # Tag matching (+10 per shared tag: quiet, studious, party)
+    tags1 = set(str(student1.get("tags", "")).lower().split(","))
+    tags2 = set(str(student2.get("tags", "")).lower().split(","))
+    shared_tags = tags1.intersection(tags2) - {''}  # Remove empty strings
+    score += len(shared_tags) * 10
+    
+    # Name similarity bonus (+5 if names start with same letter)
+    if student1.get("name", "")[0].lower() == student2.get("name", "")[0].lower():
+        score += 5
+    
+    return min(100, max(0, score))  # Clamp between 0-100
+
+def suggest_roommates(students, max_pairs=10):
+    """Find best roommate pairs from all students"""
+    if len(students) < 2:
+        return []
+    
+    pairs = []
+    for i, s1 in enumerate(students):
+        best_match = None
+        best_score = 0
+        best_reason = ""
+        
+        for j, s2 in enumerate(students[i+1:], i+1):
+            score = roommate_compatibility(s1, s2)
+            if score > best_score:
+                best_score = score
+                best_match = s2
+                reason = []
+                if int(s1.get("year", 1)) == int(s2.get("year", 1)):
+                    reason.append("Same year")
+                if len(set(str(s1.get("tags", "")).split(",")) & set(str(s2.get("tags", "")).split(","))) > 0:
+                    reason.append("Shared tags")
+                best_reason = ", ".join(reason) or "Personality match"
+        
+        if best_match and best_score >= 60:  # Only good matches
+            pairs.append({
+                "student1": s1["name"][:15],
+                "student2": best_match["name"][:15],
+                "compatibility": f"{best_score}%",
+                "year1": s1.get("year", "?"),
+                "year2": best_match.get("year", "?"),
+                "reason": best_reason
+            })
+    
+    return sorted(pairs, key=lambda x: int(x["compatibility"][:-1]), reverse=True)[:max_pairs]
+

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>🤝 AI Roommate Matching</h1>
+<p><strong>{{ students_count }} students analyzed → Found {{ pairs|length }} optimal pairs:</strong></p>
+
+{% if pairs %}
+<div class="chart-container">
+    <table style="width: 100%;">
+        <tr style="background: #2563eb; color: white;">
+            <th>Pair</th>
+            <th>Compatibility</th>
+            <th>Years</th>
+            <th>Why Perfect?</th>
+        </tr>
+        {% for pair in pairs %}
+        <tr style="background: {% if pair.compatibility[:-1]|int > 85 %}#d4edda{% elif pair.compatibility[:-1]|int > 70 %}#fff3cd{% else %}#f8d7da{% endif %};">
+            <td><strong>{{ pair.student1 }}</strong> + <strong>{{ pair.student2 }}</strong></td>
+            <td><span style="font-size: 1.2em;">{{ pair.compatibility }}</span></td>
+            <td>{{ pair.year1 }} + {{ pair.year2 }}</td>
+            <td>{{ pair.reason }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% else %}
+<div style="background: #f8f9fa; padding: 30px; text-align: center; border-radius: 10px;">
+    <h3>🧑‍🤝‍🧑 No Good Matches Yet</h3>
+    <p>Add more students with:</p>
+    <ul style="text-align: left; display: inline-block;">
+        <li><strong>Tags:</strong> quiet, studious, party</li>
+        <li><strong>Same year</strong> for +25 points</li>
+        <li><strong>Priority 0-3</strong> for balance</li>
+    </ul>
+    <a href="{{ url_for('load_sample') }}" class="btn-primary">💾 Load Sample Data</a>
+</div>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn-primary">← Dashboard</a>
+{% endblock %}

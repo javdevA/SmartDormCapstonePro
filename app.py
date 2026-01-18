@@ -10,8 +10,9 @@ from storage import (
 )
 from models import (
     greedy_allocation, compute_fairness_metrics, simulate_allocation,
-    random_allocation, priority_allocation
+    random_allocation, priority_allocation, suggest_roommates, roommate_compatibility
 )
+
 from utils import compute_checksum, valid_student_id, log_event, DATA_DIR
 
 app = Flask(__name__)
@@ -507,6 +508,13 @@ def pdf_report():
     log_event("ADMIN", "Generated official PDF report")
     return send_file(buffer, as_attachment=True, download_name=f"dorm_allocation_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}.pdf")
 
+@app.route("/roommates")
+@login_required
+def roommates():
+    students = load_students()
+    pairs = suggest_roommates(students)
+    log_event("ADMIN", f"Viewed roommate matches: {len(pairs)} pairs found")
+    return render_template("roommates.html", pairs=pairs, students_count=len(students))
 
 if __name__ == "__main__":
     app.run(debug=True)

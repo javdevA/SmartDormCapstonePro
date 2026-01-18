@@ -25,3 +25,10 @@ timestamp,level,message
 2026-01-18T17:37:43,ADMIN,Ran simulation: 100 trials
 2026-01-18T17:37:53,ADMIN,Viewed charts dashboard
 2026-01-18T17:37:55,ADMIN,Generated official PDF report
+2026-01-18T17:47:31,ADMIN,"Loaded sample data: 20 students, 5 dorms"
+2026-01-18T17:50:12,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T17:50:25,ADMIN,Viewed charts dashboard
+2026-01-18T17:50:26,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T17:50:41,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:50:42,ADMIN,Compared allocation strategies
+2026-01-18T17:50:43,ADMIN,Ran simulation: 100 trials
