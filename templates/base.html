@@ -1,44 +1,60 @@
 <!doctype html>
 <html>
 <head>
-    <title>Smart Dorm Allocation</title>
+    <title>Smart Dorm Allocation System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 </head>
 <body>
-<nav style="background: #2563eb; padding: 15px; color: white;">
+<!-- GLASS NAVIGATION -->
+<nav>
     {% if 'admin_logged_in' in session %}
     <span>👑 Admin Mode</span> | 
-<a href="{{ url_for('index') }}">🏠 Dashboard</a> |
-<a href="{{ url_for('students_list') }}">👥 Students</a> |
-<a href="{{ url_for('dorms_list') }}">🏢 Dorms</a> |
-<a href="{{ url_for('charts') }}">📊 Charts</a> |
-<a href="{{ url_for('roommates') }}">🤝 Roommates</a> |
-<a href="{{ url_for('maintenance') }}">🔧 Maintenance</a> |
-<a href="{{ url_for('waitlist') }}">⏳ Waitlist</a> |
-<a href="{{ url_for('pdf_report') }}">📄 PDF Report</a> |
-<a href="{{ url_for('run_allocation') }}">🚀 Allocate</a> |
-<a href="{{ url_for('compare_strategies') }}">⚡ Compare</a> |
-<a href="{{ url_for('run_simulation') }}">🎲 Simulate</a> |
-<a href="{{ url_for('import_export') }}">💾 Data</a> |
-<a href="{{ url_for('admin_logs') }}">📋 Logs</a> |
-<a href="{{ url_for('logout') }}">🚪 Logout</a>
+    <a href="{{ url_for('index') }}">🏠 Dashboard</a> |
+    <a href="{{ url_for('students_list') }}">👥 Students</a> |
+    <a href="{{ url_for('dorms_list') }}">🏢 Dorms</a> |
+    <a href="{{ url_for('charts') }}">📊 Charts</a> |
+    <a href="{{ url_for('roommates') }}">🤝 Roommates</a> |
+    <a href="{{ url_for('maintenance') }}">🔧 Maintenance</a> |
+    <a href="{{ url_for('waitlist') }}">⏳ Waitlist</a> |
+    <a href="{{ url_for('pdf_report') }}">📄 Reports</a> |
+    <a href="{{ url_for('run_allocation') }}">🚀 Allocate</a> |
+    <a href="{{ url_for('compare_strategies') }}">⚡ Compare</a> |
+    <a href="{{ url_for('run_simulation') }}">🎲 Simulate</a> |
+    <a href="{{ url_for('import_export') }}">💾 Data</a> |
+    <a href="{{ url_for('admin_logs') }}">📋 Logs</a> |
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
     {% else %}
-    <a href="{{ url_for('index') }}" style="color: white;">🏠 Public Dashboard</a> |
+    <a href="{{ url_for('index') }}">🏠 Dashboard</a> |
     <a href="{{ url_for('login') }}">🔐 Admin Login</a>
     {% endif %}
 </nav>
 
-<hr>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="messages">
-      {% for category, msg in messages %}
-        <li class="{{ category }}">{{ msg }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-{% block content %}{% endblock %}
+<!-- HERO SECTION -->
+<div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-radius: 0 0 32px 32px; margin: 0; padding: 2rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2);">
+    <h1 style="font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, white, rgba(255,255,255,0.8)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -0.02em;">Smart Dorm System</h1>
+    <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin: 0.5rem 0 0 0;">Enterprise Housing Management</p>
+</div>
+
+<div style="max-width: 1400px; margin: 0 auto; padding: 2rem;">
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="messages">
+                {% for category, msg in messages %}
+                    <li class="{{ category }}">{{ msg }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<!-- FOOTER -->
+<footer style="background: rgba(0,0,0,0.1); backdrop-filter: blur(20px); text-align: center; padding: 2rem; margin-top: 4rem; border-top: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 0.9rem;">
+    <p>© 2026 Smart Dorm Allocation System | Enterprise Edition v3.0</p>
+</footer>
 </body>
 </html>
-

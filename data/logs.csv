@@ -76,3 +76,39 @@ timestamp,level,message
 2026-01-18T18:23:37,ADMIN,Ran simulation: 100 trials
 2026-01-18T18:23:41,ADMIN,Ran simulation: 1000 trials
 2026-01-18T18:23:42,ADMIN,Ran simulation: 1000 trials
+2026-01-18T18:35:07,ADMIN,Viewed charts dashboard
+2026-01-18T18:35:20,ADMIN,Viewed charts dashboard
+2026-01-18T18:35:21,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:35:26,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T18:35:27,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:35:27,ADMIN,Generated official PDF report
+2026-01-18T18:35:39,ADMIN,Generated official PDF report
+2026-01-18T18:35:40,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:40:36,ADMIN,Viewed charts dashboard
+2026-01-18T18:40:37,ADMIN,Viewed charts dashboard
+2026-01-18T18:40:37,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:40:40,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:40:41,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T18:40:43,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:40:43,ADMIN,Generated official PDF report
+2026-01-18T18:45:19,ADMIN,Viewed charts dashboard
+2026-01-18T18:45:20,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:45:35,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:45:40,ADMIN,Generated official PDF report
+2026-01-18T18:45:59,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:46:21,ADMIN,"Loaded sample data: 20 students, 5 dorms"
+2026-01-18T18:46:25,ADMIN,Viewed charts dashboard
+2026-01-18T18:46:29,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:46:34,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:46:42,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T18:46:45,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:52:59,ADMIN,Viewed charts dashboard
+2026-01-18T19:05:04,ADMIN,"Loaded sample data: 20 students, 5 dorms"
+2026-01-18T19:05:07,ADMIN,Viewed charts dashboard
+2026-01-18T19:05:14,ADMIN,Viewed charts dashboard
+2026-01-18T19:05:15,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T19:05:22,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T19:05:36,ADMIN,Generated official PDF report
+2026-01-18T19:05:42,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T19:05:44,ADMIN,Compared allocation strategies
+2026-01-18T19:05:46,ADMIN,Ran simulation: 100 trials
