@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>🔧 Maintenance Ticket System</h1>
+
+<!-- NEW TICKET FORM -->
+<h3>➕ Report New Issue</h3>
+<form method="post" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+        <div>
+            <label>Room/Dorm:</label><br>
+            <input type="text" name="room" placeholder="D1-101, Lepka Palace Room 3" required style="width: 100%; padding: 8px;">
+        </div>
+        <div>
+            <label>Issue Description:</label><br>
+            <textarea name="issue" placeholder="Broken AC, leaky faucet, WiFi down..." required style="width: 100%; padding: 8px; height: 80px;"></textarea>
+        </div>
+    </div>
+    <button type="submit" class="btn-primary" style="margin-top: 15px;">📝 Create Ticket</button>
+</form>
+
+<!-- TICKETS TABLE -->
+<h3>📋 Active Tickets ({{ tickets|selectattr('status', 'equalto', 'Open')|list|length }})</h3>
+{% if tickets %}
+<div class="chart-container">
+    <table style="width: 100%;">
+        <tr style="background: #2563eb; color: white;">
+            <th>ID</th><th>Room</th><th>Issue</th><th>Reported</th><th>Status</th><th>Action</th>
+        </tr>
+        {% for ticket in tickets|sort(attribute='reported', reverse=true) %}
+        <tr style="{% if ticket.status == 'Resolved' %}background: #d4edda;{% elif ticket.status == 'Open' %}background: #fff3cd;{% endif %}">
+            <td><strong>{{ ticket.id }}</strong></td>
+            <td>{{ ticket.room }}</td>
+            <td>{{ ticket.issue[:40] }}{% if ticket.issue|length > 40 %}...{% endif %}</td>
+            <td>{{ ticket.reported }}</td>
+            <td>
+                <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; 
+                    background: {% if ticket.status == 'Open' %}#fee2e2{% elif ticket.status == 'Resolved' %}#d4edda{% endif %};">
+                    {{ ticket.status }}
+                </span>
+            </td>
+            <td>
+                {% if ticket.status == 'Open' %}
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="resolve_ticket" value="{{ ticket.id }}">
+                    <button type="submit" class="btn-primary" style="padding: 4px 12px; font-size: 12px;">✅ Resolve</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% else %}
+<div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+    <h3>🎉 No maintenance issues!</h3>
+    <p>Perfect dorm condition. Create a test ticket above.</p>
+</div>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn-primary">← Dashboard</a>
+{% endblock %}

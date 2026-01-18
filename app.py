@@ -3,11 +3,13 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from pathlib import Path
 import random
 import hashlib
+import csv
+from datetime import datetime
 from storage import (
     load_students, save_students, load_dorms, save_dorms,
-    save_allocation, import_students_from_file, import_dorms_from_file,
-    read_csv, STUDENTS_FILE, DORMS_FILE, ALLOC_FILE  # ← ADD read_csv HERE
+    save_allocation, read_csv, STUDENTS_FILE, DORMS_FILE, ALLOC_FILE
 )
+
 from models import (
     greedy_allocation, compute_fairness_metrics, simulate_allocation,
     random_allocation, priority_allocation, suggest_roommates, roommate_compatibility
@@ -515,6 +517,77 @@ def roommates():
     pairs = suggest_roommates(students)
     log_event("ADMIN", f"Viewed roommate matches: {len(pairs)} pairs found")
     return render_template("roommates.html", pairs=pairs, students_count=len(students))
+
+def write_csv(filename, data, fieldnames):
+    """Safe CSV writer"""
+    filename.parent.mkdir(parents=True, exist_ok=True)
+    with open(filename, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(data)
+
+@app.route("/maintenance", methods=["GET", "POST"])
+@login_required
+def maintenance():
+    tickets_file = DATA_DIR / "maintenance.csv"
+    tickets = []
+    
+    # Load tickets
+    if tickets_file.exists():
+        try:
+            tickets = read_csv(tickets_file)
+        except:
+            tickets = []
+    
+    if request.method == "POST":
+        # CHECK IF THIS IS RESOLVE ACTION (NEW LOGIC)
+        if request.form.get("resolve_ticket"):
+            ticket_id = request.form["resolve_ticket"]
+            for ticket in tickets:
+                if ticket.get("id") == ticket_id:
+                    ticket["status"] = "Resolved"
+                    import time
+                    ticket["resolved"] = time.strftime("%Y-%m-%d %H:%M")
+                    break
+            
+            # Save updated tickets
+            tickets_file.parent.mkdir(parents=True, exist_ok=True)
+            import csv
+            with open(tickets_file, 'w', newline='', encoding='utf-8') as f:
+                fieldnames = ["id", "room", "issue", "reported", "status", "resolved"]
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(tickets)
+            
+            flash(f"✅ Ticket {ticket_id} resolved!", "success")
+            return redirect(url_for("maintenance"))
+        
+        # CREATE NEW TICKET (original logic)
+        else:
+            import time
+            timestamp = time.strftime("%Y-%m-%d %H:%M")
+            new_ticket = {
+                "id": f"T{len(tickets) + 1:03d}",
+                "room": request.form.get("room", "Unknown"),
+                "issue": request.form.get("issue", "No description"),
+                "reported": timestamp,
+                "status": "Open"
+            }
+            tickets.append(new_ticket)
+            
+            tickets_file.parent.mkdir(parents=True, exist_ok=True)
+            import csv
+            with open(tickets_file, 'w', newline='', encoding='utf-8') as f:
+                fieldnames = ["id", "room", "issue", "reported", "status"]
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(tickets)
+            
+            log_event("ADMIN", f"New maintenance ticket: {new_ticket['id']}")
+            flash(f"✅ Ticket {new_ticket['id']} created!", "success")
+            return redirect(url_for("maintenance"))
+    
+    return render_template("maintenance.html", tickets=tickets)
 
 if __name__ == "__main__":
     app.run(debug=True)

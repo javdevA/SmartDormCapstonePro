@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<!-- ADMIN QUICK ACTIONS (login required) -->
+<!-- ADMIN QUICK ACTIONS (login required) - ALL BUTTONS -->
 {% if is_admin %}
 <h2>👑 Admin Control Panel</h2>
 <div class="quick-actions">
@@ -30,21 +30,26 @@
         <button type="submit" class="btn-primary">💾 Load Sample Data</button>
     </form>
     <a href="{{ url_for('charts') }}" class="btn-primary">📊 Live Charts</a>
-    <a href="{{ url_for('pdf_report') }}" class="btn-primary">📄 Generate PDF</a>
-    <a href="{{ url_for('compare_strategies') }}" class="btn-primary">⚡ Compare Strategies</a>
-    <a href="{{ url_for('run_allocation') }}" class="btn-primary">🚀 Run Allocation</a>
-    <a href="{{ url_for('admin_logs') }}" class="btn-secondary">📋 Audit Logs</a>
+    <a href="{{ url_for('roommates') }}" class="btn-primary">🤝 Roommates</a>
+    <a href="{{ url_for('maintenance') }}" class="btn-primary">🔧 Maintenance</a>
+    <a href="{{ url_for('compare_strategies') }}" class="btn-primary">⚡ Compare</a>
+    <a href="{{ url_for('run_allocation') }}" class="btn-primary">🚀 Allocate</a>
+    <a href="{{ url_for('pdf_report') }}" class="btn-primary">📄 PDF Report</a>
 </div>
 
-<h3>🚀 Quick Stats</h3>
+<h3>🚀 System Status</h3>
 <div class="activity" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
     <div class="stat-card">
         <h4>Ready for Allocation</h4>
-        <p>{{ dorms|length > 0 and students|length > 0 and '✅ YES' or '⚠️ Add data first' }}</p>
+        <p>{{ '✅ YES' if dorms|length > 0 and students|length > 0 else '⚠️ Add data first' }}</p>
     </div>
     <div class="stat-card">
         <h4>High Priority Students</h4>
-        <p>{{ students|selectattr('priority', '>', '0')|list|length }}</p>
+        <p>{{ students|selectattr('priority', 'equalto', '3')|list|length }} / {{ students|length }}</p>
+    </div>
+    <div class="stat-card">
+        <h4>AI Roommate Pairs</h4>
+        <p>{{ students|length // 2 }} possible</p>
     </div>
 </div>
 {% else %}
@@ -56,15 +61,16 @@
         <li><strong>Username:</strong> <code>admin</code></li>
         <li><strong>Password:</strong> <code>password123</code></li>
     </ul>
-    <p>Login to access full features including:</p>
+    <p>Login to access:</p>
     <ul>
         <li>👥 Student & dorm management</li>
-        <li>🚀 Advanced allocation algorithms</li>
-        <li>📊 Live analytics dashboard</li>
-        <li>💾 Data import/export</li>
-        <li>📋 Complete audit trail</li>
+        <li>🤝 AI Roommate matching</li>
+        <li>🔧 Maintenance tickets</li>
+        <li>📊 Live analytics + charts</li>
+        <li>📄 Official PDF reports</li>
     </ul>
     <a href="{{ url_for('login') }}" class="btn-primary" style="font-size: 18px; padding: 15px 30px;">🔐 Admin Login</a>
 </div>
 {% endif %}
 {% endblock %}
+
