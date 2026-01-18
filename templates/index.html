@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>🏠 Smart Dorm Allocation System</h1>
+
+<!-- DASHBOARD STATS -->
 <div class="dashboard">
     <div class="stat-card">
         <h2>{{ students|length }}</h2>
@@ -14,21 +16,44 @@
         <h2>{{ total_capacity }}</h2>
         <p>Total Capacity</p>
     </div>
-    <div class="stat-card">
-        <h2>{{ unallocated }}</h2>
-        <p>Need Allocation</p>
+    <div class="stat-card {% if students|length > total_capacity %}warning{% endif %}">
+        <h2>{{ students|length - total_capacity if students|length > total_capacity else 0 }}</h2>
+        <p>Capacity Overflow</p>
     </div>
 </div>
 
-<h2>Quick Actions</h2>
+<!-- ADMIN QUICK ACTIONS (Only visible when logged in) -->
+{% if is_admin %}
+<h2>👑 Admin Quick Actions</h2>
 <div class="quick-actions">
+    <form method="post" action="{{ url_for('load_sample') }}" style="display:inline;">
+        <button type="submit" class="btn-primary">💾 Generate Sample Data</button>
+    </form>
+    <a href="{{ url_for('compare_strategies') }}" class="btn-primary">📊 Compare Strategies</a>
     <a href="{{ url_for('run_allocation') }}" class="btn-primary">🚀 Run Allocation</a>
-    <a href="{{ url_for('run_simulation') }}" class="btn-primary">📊 Run Simulation</a>
+    <a href="{{ url_for('admin_logs') }}" class="btn-secondary">📋 View Logs</a>
 </div>
 
-<h3>💾 Load Sample Data</h3>
-<form method="post" action="{{ url_for('load_sample') }}" style="display:inline;">
-    <button type="submit" class="btn-primary">Generate 20 Students + 5 Dorms</button>
-</form>
-
+<!-- RECENT ACTIVITY (Only for admin) -->
+<h3>📈 Recent Activity</h3>
+<div class="activity">
+    <p><strong>Total allocations run:</strong> Check logs</p>
+    <p><strong>Students added today:</strong> {{ students|length }}</p>
+    <p><strong>System ready for allocation!</strong></p>
+</div>
+{% else %}
+<!-- PUBLIC VIEW (No login) -->
+<div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
+    <h3>🔒 Admin Login Required</h3>
+    <p>Login as <strong>admin</strong> / <strong>password123</strong> to access:</p>
+    <ul>
+        <li>Student & dorm management</li>
+        <li>Allocation algorithms</li>
+        <li>Strategy comparison</li>
+        <li>Data import/export</li>
+        <li>Audit logs</li>
+    </ul>
+    <a href="{{ url_for('login') }}" class="btn-primary">🔐 Admin Login</a>
+</div>
+{% endif %}
 {% endblock %}

@@ -5,15 +5,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<nav>
-    <a href="{{ url_for('index') }}">Home</a> |
-    <a href="{{ url_for('students_list') }}">Students</a> |
-    <a href="{{ url_for('dorms_list') }}">Dorms</a> |
-    <a href="{{ url_for('run_allocation') }}">Run Allocation</a> |
-    <a href="{{ url_for('run_simulation') }}">Simulation</a> |
-    <a href="{{ url_for('import_export') }}">Import/Export</a>
-    <a href="{{ url_for('compare_strategies') }}">Compare Strategies</a> |
+<nav style="background: #2563eb; padding: 15px; color: white;">
+    {% if 'admin_logged_in' in session %}
+    <span>👑 Admin Mode</span> | 
+    <a href="{{ url_for('index') }}" style="color: white;">🏠 Dashboard</a> |
+    <a href="{{ url_for('students_list') }}">👥 Students</a> |
+    <a href="{{ url_for('dorms_list') }}">🏢 Dorms</a> |
+    <a href="{{ url_for('run_allocation') }}">🚀 Allocate</a> |
+    <a href="{{ url_for('compare_strategies') }}">📊 Compare</a> |
+    <a href="{{ url_for('run_simulation') }}">🎲 Simulate</a> |
+    <a href="{{ url_for('import_export') }}">💾 Data</a> |
+    <a href="{{ url_for('admin_logs') }}">📋 Logs</a> |
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    {% else %}
+    <a href="{{ url_for('index') }}" style="color: white;">🏠 Public Dashboard</a> |
+    <a href="{{ url_for('login') }}">🔐 Admin Login</a>
+    {% endif %}
 </nav>
+
 <hr>
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}

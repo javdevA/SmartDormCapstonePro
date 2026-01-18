@@ -1,7 +1,8 @@
-# app.py - COMPLETE VERSION WITH ALL FEATURES
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+# app.py - WITH ADMIN LOGIN SYSTEM
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file, session
 from pathlib import Path
 import random
+import hashlib
 from storage import (
     load_students, save_students, load_dorms, save_dorms,
     save_allocation, import_students_from_file, import_dorms_from_file,
@@ -14,26 +15,55 @@ from models import (
 from utils import compute_checksum, valid_student_id, log_event, DATA_DIR
 
 app = Flask(__name__)
-app.secret_key = "smart-dorm-2026-change-this"
+app.secret_key = "smart-dorm-2026-admin-auth"
+
+# ADMIN CREDENTIALS (change these for production!)
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD_HASH = hashlib.sha256("password123".encode()).hexdigest()  # password123
+
+def login_required(f):
+    def wrapper(*args, **kwargs):
+        if 'admin_logged_in' not in session:
+            flash("🔒 Admin login required!", "error")
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = hashlib.sha256(request.form["password"].encode()).hexdigest()
+        
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD_HASH:
+            session['admin_logged_in'] = True
+            flash("✅ Admin login successful!", "success")
+            return redirect(url_for("index"))
+        else:
+            flash("❌ Invalid credentials!", "error")
+    
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop('admin_logged_in', None)
+    flash("👋 Logged out successfully.", "success")
+    return redirect(url_for("login"))
 
 @app.route("/")
 def index():
     students = load_students()
     dorms = load_dorms()
     total_capacity = sum(int(d.get('capacity', 0)) for d in dorms)
+    is_admin = 'admin_logged_in' in session
     
-    # Check latest allocation status
-    try:
-        allocation = greedy_allocation(students, dorms)
-        allocated_count = len([s for s in students if allocation.get(s.get('student_id'))])
-        unallocated = len(students) - allocated_count
-    except:
-        unallocated = len(students)
-    
+    # Public dashboard shows basic stats only
     return render_template("index.html", students=students, dorms=dorms, 
-                         total_capacity=total_capacity, unallocated=unallocated)
+                         total_capacity=total_capacity, is_admin=is_admin)
 
 @app.route("/load_sample", methods=["POST"])
+@login_required
 def load_sample():
     names = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack"]
     sample_students = []
@@ -58,16 +88,19 @@ def load_sample():
     
     save_students(sample_students)
     save_dorms(sample_dorms)
+    log_event("ADMIN", f"Loaded sample data: 20 students, 5 dorms")
     flash("✅ Loaded 20 students + 5 dorms! Try allocation now!", "success")
     return redirect(url_for("index"))
 
-# ------------- STUDENTS -------------
+# ------------- PROTECTED ROUTES (Admin Only) -------------
 @app.route("/students")
+@login_required
 def students_list():
     students = load_students()
     return render_template("students_list.html", students=students)
 
 @app.route("/students/add", methods=["GET", "POST"])
+@login_required
 def add_student():
     if request.method == "POST":
         students = load_students()
@@ -82,7 +115,6 @@ def add_student():
             flash("Student ID is required.", "error")
             return redirect(url_for("add_student"))
 
-        # auto-add checksum if needed
         if not valid_student_id(raw_id):
             core = raw_id[:-1] if len(raw_id) > 1 else raw_id
             new_id = compute_checksum(core)
@@ -106,12 +138,14 @@ def add_student():
             "tags": tags
         })
         save_students(students)
+        log_event("ADMIN", f"Added student: {name} ({new_id})")
         flash(f"✅ Student {name} added with ID {new_id}", "success")
         return redirect(url_for("students_list"))
 
     return render_template("student_form.html", mode="add", student=None)
 
 @app.route("/students/edit/<student_id>", methods=["GET", "POST"])
+@login_required
 def edit_student(student_id):
     students = load_students()
     student = next((s for s in students if s.get("student_id") == student_id), None)
@@ -137,26 +171,32 @@ def edit_student(student_id):
         student["tags"] = request.form.get("tags", "")
 
         save_students(students)
+        log_event("ADMIN", f"Edited student: {student['name']} ({new_id})")
         flash("✅ Student updated.", "success")
         return redirect(url_for("students_list"))
 
     return render_template("student_form.html", mode="edit", student=student)
 
 @app.route("/students/delete/<student_id>", methods=["POST"])
+@login_required
 def delete_student(student_id):
     students = load_students()
+    before_count = len(students)
     students = [s for s in students if s.get("student_id") != student_id]
     save_students(students)
+    log_event("ADMIN", f"Deleted student ID: {student_id} (count: {before_count}→{len(students)})")
     flash("🗑️ Student deleted.", "success")
     return redirect(url_for("students_list"))
 
-# ------------- DORMS -------------
+# ------------- DORMS (Admin Only) -------------
 @app.route("/dorms")
+@login_required
 def dorms_list():
     dorms = load_dorms()
     return render_template("dorms_list.html", dorms=dorms)
 
 @app.route("/dorms/add", methods=["GET", "POST"])
+@login_required
 def add_dorm():
     if request.method == "POST":
         dorms = load_dorms()
@@ -176,12 +216,14 @@ def add_dorm():
             "attributes": attributes
         })
         save_dorms(dorms)
+        log_event("ADMIN", f"Added dorm: {name} ({dorm_id})")
         flash("✅ Dorm added.", "success")
         return redirect(url_for("dorms_list"))
 
     return render_template("dorm_form.html", mode="add", dorm=None)
 
 @app.route("/dorms/edit/<dorm_id>", methods=["GET", "POST"])
+@login_required
 def edit_dorm(dorm_id):
     dorms = load_dorms()
     dorm = next((d for d in dorms if d.get("dorm_id") == dorm_id), None)
@@ -194,22 +236,26 @@ def edit_dorm(dorm_id):
         dorm["capacity"] = request.form["capacity"]
         dorm["attributes"] = request.form["attributes"]
         save_dorms(dorms)
+        log_event("ADMIN", f"Edited dorm: {dorm['name']} ({dorm_id})")
         flash("✅ Dorm updated.", "success")
         return redirect(url_for("dorms_list"))
 
     return render_template("dorm_form.html", mode="edit", dorm=dorm)
 
 @app.route("/dorms/delete/<dorm_id>", methods=["POST"])
+@login_required
 def delete_dorm(dorm_id):
     dorms = load_dorms()
     dorms = [d for d in dorms if d.get("dorm_id") != dorm_id]
     save_dorms(dorms)
+    log_event("ADMIN", f"Deleted dorm: {dorm_id}")
     flash("🗑️ Dorm deleted.", "success")
     return redirect(url_for("dorms_list"))
 
-# ------------- ALLOCATION & STRATEGIES -------------
+# ------------- ALLOCATION & STRATEGIES (Admin Only) -------------
 @app.route("/allocate/<strategy>", defaults={"strategy": "greedy"})
 @app.route("/allocate")
+@login_required
 def run_allocation(strategy="greedy"):
     students = load_students()
     dorms = load_dorms()
@@ -228,6 +274,7 @@ def run_allocation(strategy="greedy"):
         strategy_name = "Smart Greedy"
     
     save_allocation(allocation)
+    log_event("ADMIN", f"Ran allocation: {strategy_name} strategy")
     metrics = compute_fairness_metrics(students, allocation)
     return render_template(
         "allocation_result.html",
@@ -236,6 +283,7 @@ def run_allocation(strategy="greedy"):
     )
 
 @app.route("/compare")
+@login_required
 def compare_strategies():
     students = load_students()
     dorms = load_dorms()
@@ -256,9 +304,11 @@ def compare_strategies():
         metrics["unallocated"] = len([s for s in students if not alloc.get(s.get("student_id"))])
         results[strat_name] = metrics
     
+    log_event("ADMIN", "Compared allocation strategies")
     return render_template("strategy_compare.html", results=results)
 
 @app.route("/simulate", methods=["GET", "POST"])
+@login_required
 def run_simulation():
     students = load_students()
     dorms = load_dorms()
@@ -274,10 +324,12 @@ def run_simulation():
             trials = 100
 
     result = simulate_allocation(students, dorms, trials=trials)
+    log_event("ADMIN", f"Ran simulation: {trials} trials")
     return render_template("simulation_result.html", result=result, trials=trials)
 
-# ------------- IMPORT / EXPORT -------------
+# ------------- IMPORT/EXPORT & ADMIN (Admin Only) -------------
 @app.route("/import_export", methods=["GET", "POST"])
+@login_required
 def import_export():
     if request.method == "POST":
         target = request.form["target"]
@@ -293,10 +345,12 @@ def import_export():
         if target == "students":
             students = import_students_from_file(tmp_path)
             save_students(students)
+            log_event("ADMIN", f"Imported {len(students)} students")
             flash("✅ Students imported.", "success")
         elif target == "dorms":
             dorms = import_dorms_from_file(tmp_path)
             save_dorms(dorms)
+            log_event("ADMIN", f"Imported {len(dorms)} dorms")
             flash("✅ Dorms imported.", "success")
         else:
             flash("Unknown import target.", "error")
@@ -307,6 +361,7 @@ def import_export():
     return render_template("import_export.html")
 
 @app.route("/export/<what>")
+@login_required
 def export_csv(what):
     if what == "students":
         path = STUDENTS_FILE
@@ -318,12 +373,24 @@ def export_csv(what):
         flash("Unknown export type.", "error")
         return redirect(url_for("index"))
 
-    # FIXED: Check if file has data beyond header
     if not path.exists() or path.read_text().strip().split('\n') == [path.read_text().strip().split(',')[0]]:
         flash(f"No {what} data to export yet.", "error")
         return redirect(url_for("index"))
 
+    log_event("ADMIN", f"Exported {what}")
     return send_file(path, as_attachment=True)
+
+@app.route("/admin_logs")
+@login_required
+def admin_logs():
+    logs = []
+    if (DATA_DIR / "logs.csv").exists():
+        import csv
+        with (DATA_DIR / "logs.csv").open() as f:
+            reader = csv.DictReader(f)
+            logs = list(reader)[-20:]  # Last 20 entries
+    return render_template("admin_logs.html", logs=logs)
 
 if __name__ == "__main__":
     app.run(debug=True)
+

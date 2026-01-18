@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📋 Admin Audit Logs (Last 20 Actions)</h2>
+<table>
+    <tr><th>Time</th><th>Level</th><th>Action</th></tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.timestamp[:19] }}</td>
+        <td>{{ log.level }}</td>
+        <td>{{ log.message }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('index') }}">← Back to Dashboard</a>
+{% endblock %}
