@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🏆 Strategy Comparison</h2>
+<table>
+    <tr>
+        <th>Strategy</th><th>Top-1 Satisfaction</th><th>Top-3 Satisfaction</th><th>Unallocated</th><th>Action</th>
+    </tr>
+    {% for strat, metrics in results.items() %}
+    <tr>
+        <td>{{ strat }}</td>
+        <td>{{ (metrics.top1_rate * 100)|round(1) }}%</td>
+        <td>{{ (metrics.top3_rate * 100)|round(1) }}%</td>
+        <td>{{ metrics.unallocated }}</td>
+        <td><a href="{{ url_for('run_allocation', strategy=strat.lower().replace('-','')) }}" class="btn-primary">Use This</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('index') }}">← Back to Dashboard</a>
+{% endblock %}
+

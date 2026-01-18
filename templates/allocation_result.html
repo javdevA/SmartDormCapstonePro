@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Allocation Result</h2>
+
+<p>Top-1 satisfaction: {{ (metrics.top1_rate * 100) | round(1) }}%</p>
+<p>Top-3 satisfaction: {{ (metrics.top3_rate * 100) | round(1) }}%</p>
+<p>Envy pairs: {{ metrics.envy_pairs }}</p>
+
+<table>
+    <tr>
+        <th>Student ID</th><th>Name</th><th>Assigned Dorm</th>
+    </tr>
+    {% for s in students %}
+    <tr>
+        <td>{{ s.student_id }}</td>
+        <td>{{ s.name }}</td>
+        <td>
+            {% set assigned = allocation.get(s.student_id) %}
+            {{ assigned if assigned else 'UNALLOCATED' }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<p><a href="{{ url_for('export_csv', what='allocations') }}">Download allocation as CSV</a></p>
+{% endblock %}

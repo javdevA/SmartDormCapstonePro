@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Import / Export CSV</h2>
+
+<h3>Import</h3>
+<form method="post" enctype="multipart/form-data">
+    <label>Target:</label>
+    <select name="target">
+        <option value="students">Students</option>
+        <option value="dorms">Dorms</option>
+    </select><br><br>
+    <input type="file" name="file" accept=".csv">
+    <button type="submit">Upload</button>
+</form>
+
+<h3>Export</h3>
+<ul>
+    <li><a href="{{ url_for('export_csv', what='students') }}">Download students.csv</a></li>
+    <li><a href="{{ url_for('export_csv', what='dorms') }}">Download dorms.csv</a></li>
+    <li><a href="{{ url_for('export_csv', what='allocations') }}">Download allocations.csv</a></li>
+</ul>
+{% endblock %}

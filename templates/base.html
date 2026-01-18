@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <title>Smart Dorm Allocation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav>
+    <a href="{{ url_for('index') }}">Home</a> |
+    <a href="{{ url_for('students_list') }}">Students</a> |
+    <a href="{{ url_for('dorms_list') }}">Dorms</a> |
+    <a href="{{ url_for('run_allocation') }}">Run Allocation</a> |
+    <a href="{{ url_for('run_simulation') }}">Simulation</a> |
+    <a href="{{ url_for('import_export') }}">Import/Export</a>
+    <a href="{{ url_for('compare_strategies') }}">Compare Strategies</a> |
+</nav>
+<hr>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="messages">
+      {% for category, msg in messages %}
+        <li class="{{ category }}">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block content %}{% endblock %}
+</body>
+</html>
+

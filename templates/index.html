@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>🏠 Smart Dorm Allocation System</h1>
+<div class="dashboard">
+    <div class="stat-card">
+        <h2>{{ students|length }}</h2>
+        <p>Total Students</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ dorms|length }}</h2>
+        <p>Total Dorms</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ total_capacity }}</h2>
+        <p>Total Capacity</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ unallocated }}</h2>
+        <p>Need Allocation</p>
+    </div>
+</div>
+
+<h2>Quick Actions</h2>
+<div class="quick-actions">
+    <a href="{{ url_for('run_allocation') }}" class="btn-primary">🚀 Run Allocation</a>
+    <a href="{{ url_for('run_simulation') }}" class="btn-primary">📊 Run Simulation</a>
+</div>
+
+<h3>💾 Load Sample Data</h3>
+<form method="post" action="{{ url_for('load_sample') }}" style="display:inline;">
+    <button type="submit" class="btn-primary">Generate 20 Students + 5 Dorms</button>
+</form>
+
+{% endblock %}

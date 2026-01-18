@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ 'Add' if mode == 'add' else 'Edit' }} Dorm</h2>
+<form method="post">
+    <label>Dorm ID:</label><br>
+    <input type="text" name="dorm_id" value="{{ dorm.dorm_id if dorm else '' }}" {% if mode == 'edit' %}readonly{% endif %}><br>
+
+    <label>Name:</label><br>
+    <input type="text" name="name" value="{{ dorm.name if dorm else '' }}" required><br>
+
+    <label>Capacity:</label><br>
+    <input type="number" name="capacity" min="0" value="{{ dorm.capacity if dorm else '0' }}" required><br>
+
+    <label>Attributes (e.g. quiet,near_library,female_only):</label><br>
+    <input type="text" name="attributes" value="{{ dorm.attributes if dorm else '' }}"><br><br>
+
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

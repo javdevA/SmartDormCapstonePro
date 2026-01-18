@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Simulation Result</h2>
+<p>Trials: {{ trials }}</p>
+<ul>
+    <li>Average top-1 satisfaction: {{ (result.avg_top1 * 100) | round(1) }}%</li>
+    <li>Average top-3 satisfaction: {{ (result.avg_top3 * 100) | round(1) }}%</li>
+    <li>Average envy pairs: {{ result.avg_envy_pairs | round(2) }}</li>
+</ul>
+<form method="post">
+    <label>Number of trials:</label>
+    <input type="number" name="trials" value="{{ trials }}" min="1" max="1000">
+    <button type="submit">Run again</button>
+</form>
+{% endblock %}
