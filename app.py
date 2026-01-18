@@ -12,7 +12,8 @@ from storage import (
 
 from models import (
     greedy_allocation, compute_fairness_metrics, simulate_allocation,
-    random_allocation, priority_allocation, suggest_roommates, roommate_compatibility
+    random_allocation, priority_allocation, suggest_roommates, roommate_compatibility,
+    create_waitlist, auto_reallocate_waitlist  # ← ADD THESE TWO
 )
 
 from utils import compute_checksum, valid_student_id, log_event, DATA_DIR
@@ -588,6 +589,34 @@ def maintenance():
             return redirect(url_for("maintenance"))
     
     return render_template("maintenance.html", tickets=tickets)
+
+@app.route("/waitlist")
+@login_required
+def waitlist():
+    students = load_students()
+    dorms = load_dorms()
+    
+    # Get current allocation (or empty)
+    current_allocation = {}
+    if ALLOC_FILE.exists():
+        try:
+            allocations = read_csv(ALLOC_FILE)
+            current_allocation = {alloc["student_id"]: alloc["dorm_id"] for alloc in allocations}
+        except:
+            pass
+    
+    # Create waitlist
+    waitlist = create_waitlist(students, current_allocation)
+    
+    # Show auto-reallocation preview
+    new_allocation = auto_reallocate_waitlist(waitlist[:5], dorms, current_allocation)  # Top 5
+    
+    log_event("ADMIN", f"Viewed waitlist: {len(waitlist)} students waiting")
+    return render_template("waitlist.html", 
+                         waitlist=waitlist, 
+                         current_alloc=len(current_allocation),
+                         total_students=len(students),
+                         new_alloc=len(new_allocation) - len(current_allocation))
 
 if __name__ == "__main__":
     app.run(debug=True)

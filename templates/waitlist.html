@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>⏳ Smart Waitlist Management</h1>
+
+<div class="chart-container">
+    <h3>📊 Waitlist Status</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div class="stat-card">
+            <h2>{{ waitlist|length }}</h2>
+            <p>Students Waiting</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ current_alloc }}</h2>
+            <p>Currently Allocated</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ total_students }}</h2>
+            <p>Total Students</p>
+        </div>
+    </div>
+</div>
+
+{% if waitlist %}
+<h3>🔥 Priority Waitlist (Highest Priority First)</h3>
+<table style="width: 100%;">
+    <tr style="background: #2563eb; color: white;">
+        <th>Priority</th><th>Student</th><th>ID</th><th>Status</th>
+    </tr>
+    {% for entry in waitlist[:10] %}
+    <tr style="background: {% if entry.priority == 3 %}#fef3c7{% elif entry.priority == 2 %}#dbeafe{% endif %}">
+        <td><strong>P{{ entry.priority }}</strong></td>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.student_id }}</td>
+        <td>
+            <span style="padding: 4px 8px; border-radius: 12px; 
+                background: #fee2e2; font-weight: bold;">WAITING</span>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>✨ Auto-Reallocation Preview</h3>
+<p><strong>Top {{ new_alloc }} waitlist students could be placed if beds free up:</strong></p>
+<ul>
+    {% for entry in waitlist[:new_alloc] %}
+    <li>✅ {{ entry.name }} (P{{ entry.priority }}) → Next available bed</li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<div style="text-align: center; padding: 40px; background: #d4edda; border-radius: 10px;">
+    <h3>🎉 No Waitlist Needed!</h3>
+    <p>All {{ total_students }} students have dorm assignments.</p>
+</div>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn-primary">← Dashboard</a>
+{% endblock %}

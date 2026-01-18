@@ -50,3 +50,29 @@ timestamp,level,message
 2026-01-18T18:15:27,ADMIN,Compared allocation strategies
 2026-01-18T18:15:28,ADMIN,Ran simulation: 100 trials
 2026-01-18T18:15:35,ADMIN,Viewed charts dashboard
+2026-01-18T18:20:21,ADMIN,"Loaded sample data: 20 students, 5 dorms"
+2026-01-18T18:20:21,ADMIN,Viewed charts dashboard
+2026-01-18T18:20:24,ADMIN,Viewed charts dashboard
+2026-01-18T18:20:25,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:20:26,ADMIN,Generated official PDF report
+2026-01-18T18:20:42,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:20:43,ADMIN,Compared allocation strategies
+2026-01-18T18:20:43,ADMIN,Ran simulation: 100 trials
+2026-01-18T18:22:11,ADMIN,Viewed charts dashboard
+2026-01-18T18:22:13,ADMIN,Viewed charts dashboard
+2026-01-18T18:22:14,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:22:15,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T18:22:35,ADMIN,Added student: Derennnn (23522)
+2026-01-18T18:22:38,ADMIN,Viewed waitlist: 1 students waiting
+2026-01-18T18:22:54,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:23:16,ADMIN,Deleted student ID: 10089 (count: 21→20)
+2026-01-18T18:23:19,ADMIN,Viewed waitlist: 1 students waiting
+2026-01-18T18:23:23,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:23:26,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T18:23:33,ADMIN,Viewed charts dashboard
+2026-01-18T18:23:34,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T18:23:35,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T18:23:35,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T18:23:37,ADMIN,Ran simulation: 100 trials
+2026-01-18T18:23:41,ADMIN,Ran simulation: 1000 trials
+2026-01-18T18:23:42,ADMIN,Ran simulation: 1000 trials

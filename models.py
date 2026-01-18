@@ -213,3 +213,43 @@ def suggest_roommates(students, max_pairs=10):
     
     return sorted(pairs, key=lambda x: int(x["compatibility"][:-1]), reverse=True)[:max_pairs]
 
+def create_waitlist(students, allocation):
+    """Priority waitlist for unallocated students (highest priority first)"""
+    waitlist = []
+    for student in students:
+        student_id = student.get("student_id")
+        if not allocation.get(student_id):  # Unallocated
+            priority = int(student.get("priority", 0))
+            waitlist.append({
+                "student": student,
+                "priority": priority,
+                "student_id": student_id,
+                "name": student.get("name", "Unknown")
+            })
+    # Sort by priority DESC (3=first, 0=last)
+    return sorted(waitlist, key=lambda x: x["priority"], reverse=True)
+
+def auto_reallocate_waitlist(waitlist, dorms, current_allocation):
+    """Try to allocate waitlist students to available beds"""
+    new_allocations = current_allocation.copy()
+    available_beds = {}
+    
+    # Count current occupancy
+    for dorm in dorms:
+        dorm_id = dorm["dorm_id"]
+        capacity = int(dorm.get("capacity", 0))
+        current_count = sum(1 for alloc in current_allocation.values() if alloc == dorm_id)
+        available_beds[dorm_id] = capacity - current_count
+    
+    # Try to allocate waitlist students
+    for entry in waitlist:
+        student_id = entry["student_id"]
+        for dorm_id, spaces in available_beds.items():
+            if spaces > 0:
+                new_allocations[student_id] = dorm_id
+                available_beds[dorm_id] -= 1
+                break
+    
+    return new_allocations
+
+
