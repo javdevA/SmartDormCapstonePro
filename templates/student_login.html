@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 450px; margin: 100px auto; padding: 40px;">
+    <h1 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem;">🎓 Student Portal</h1>
+    <div style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); padding: 3rem; border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.15);">
+        <p style="text-align: center; color: #64748b; margin-bottom: 2rem;">
+            <strong>Test Credentials:</strong><br>
+            ID: <code>s1001</code> / Pass: <code>student123</code><br>
+            ID: <code>s1002</code> / Pass: <code>student123</code>
+        </p>
+        
+        <form method="post">
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Student ID:</label>
+                <input type="text" name="student_id" style="width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.1); border-radius: 12px; font-size: 1.1rem;" placeholder="s1001" required>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Password:</label>
+                <input type="password" name="password" style="width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.1); border-radius: 12px; font-size: 1.1rem;" placeholder="student123" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 1.2rem; font-size: 1.1rem;">Enter Portal</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('index') }}" style="color: #3b82f6;">← Admin Dashboard</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

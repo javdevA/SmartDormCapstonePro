@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <h1 style="text-align: center;">🤝 My Roommates ({{ dorm_name }})</h1>
+    
+    {% if dorm_mates %}
+    <div class="dashboard">
+        {% for mate in dorm_mates %}
+        <div class="stat-card">
+            <h2>{{ mate.name }}</h2>
+            <p>Roommate in {{ dorm_name }}</p>
+            <p style="color: #64748b;">Year {{ mate.year }} • P{{ mate.priority }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem; background: rgba(255,255,255,0.2); border-radius: 24px;">
+        <h3>🛏️ Solo Room or No Roommates Yet</h3>
+        <p>Your dorm assignment is processing or you have a single room.</p>
+    </div>
+    {% endif %}
+    
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('student_dashboard') }}" class="btn-primary">← Dashboard</a>
+    </div>
+</div>
+{% endblock %}

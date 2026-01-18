@@ -27,6 +27,7 @@
     <a href="{{ url_for('logout') }}">🚪 Logout</a>
     {% else %}
     <a href="{{ url_for('index') }}">🏠 Dashboard</a> |
+    <a href="{{ url_for('student_login') }}">🎓 Student Portal</a> |
     <a href="{{ url_for('login') }}">🔐 Admin Login</a>
     {% endif %}
 </nav>

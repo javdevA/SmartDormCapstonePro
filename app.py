@@ -72,7 +72,11 @@ def load_sample():
     names = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack"]
     sample_students = []
     for i in range(20):
-        sid = f"{1000+i}{sum(int(d) for d in str(1000+i)) % 10}"
+        if i < 3:
+            sid = f"s{1000+i}{sum(int(d) for d in str(1000+i)) % 10}"  # s1001, s1002, s1003
+        else:
+            sid = f"{1000+i}{sum(int(d) for d in str(1000+i)) % 10}"
+
         sample_students.append({
             "student_id": sid,
             "name": f"{random.choice(names)} {chr(65+i%10)}",
@@ -617,6 +621,222 @@ def waitlist():
                          current_alloc=len(current_allocation),
                          total_students=len(students),
                          new_alloc=len(new_allocation) - len(current_allocation))
+
+# STUDENT AUTH SYSTEM
+STUDENT_ACCOUNTS = {
+    "s1001": hashlib.sha256("student123".encode()).hexdigest(),  # s1001/student123
+    "s1002": hashlib.sha256("student123".encode()).hexdigest(),
+    "s1003": hashlib.sha256("student456".encode()).hexdigest(),
+}
+
+def student_login_required(f):
+    def wrapper(*args, **kwargs):
+        if 'student_logged_in' not in session:
+            flash("🎓 Student login required!", "error")
+            return redirect(url_for('student_login'))
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
+@app.route("/student/login", methods=["GET", "POST"])
+def student_login():
+    if request.method == "POST":
+        student_id = request.form["student_id"]
+        password = hashlib.sha256(request.form["password"].encode()).hexdigest()
+        
+        if student_id in STUDENT_ACCOUNTS and STUDENT_ACCOUNTS[student_id] == password:
+            session['student_logged_in'] = student_id
+            session['student_name'] = f"Student {student_id[-3:]}"
+            flash("✅ Student login successful!", "success")
+            return redirect(url_for("student_dashboard"))
+        else:
+            flash("❌ Invalid student credentials!", "error")
+    
+    return render_template("student_login.html")
+
+@app.route("/student/logout")
+def student_logout():
+    session.pop('student_logged_in', None)
+    session.pop('student_name', None)
+    flash("👋 Student logout successful.", "success")
+    return redirect(url_for("index"))
+
+@app.route("/student/dashboard")
+@student_login_required
+def student_dashboard():
+    # Check if student is logged in
+    if 'student_logged_in' not in session:
+        flash("🎓 Please login first!", "error")
+        return redirect(url_for('student_login'))
+    
+    student_id = session['student_logged_in']
+    students = load_students()
+    dorms = load_dorms()
+    
+    # Find this student
+    my_student = next((s for s in students if s.get("student_id") == student_id), None)
+    if not my_student:
+        flash(f"Student {student_id} not found in database!", "error")
+        return redirect(url_for("student_login"))
+    
+    # Find my allocation
+    allocation = {}
+    if ALLOC_FILE.exists():
+        try:
+            allocations = read_csv(ALLOC_FILE)
+            allocation = {a["student_id"]: a["dorm_id"] for a in allocations}
+        except:
+            pass
+    
+    my_dorm = allocation.get(student_id, "⏳ On waitlist")
+    dorm_name = next((d["name"] for d in dorms if d["dorm_id"] == my_dorm), my_dorm)
+    
+    # Find my roommate
+    my_roommate = "None assigned"
+    allocations_list = read_csv(ALLOC_FILE) if ALLOC_FILE.exists() else []
+    for alloc in allocations_list:
+        if alloc["dorm_id"] == my_dorm and alloc["student_id"] != student_id:
+            roommate_student = next((s for s in students if s["student_id"] == alloc["student_id"]), None)
+            if roommate_student:
+                my_roommate = roommate_student["name"]
+            break
+    
+    log_event("STUDENT", f"{student_id} viewed dashboard")
+    return render_template("student_dashboard.html", 
+                         student=my_student, 
+                         dorm_name=dorm_name,
+                         roommate=my_roommate,
+                         student_id=student_id)
+
+# ============= STUDENT-SPECIFIC PAGES =============
+
+@app.route("/student/maintenance", methods=["GET", "POST"])
+@student_login_required
+def student_maintenance():
+    tickets_file = DATA_DIR / "maintenance.csv"
+    tickets = []
+    student_id = session['student_logged_in']
+    
+    # Load tickets
+    if tickets_file.exists():
+        try:
+            tickets = read_csv(tickets_file)
+        except:
+            tickets = []
+    
+    if request.method == "POST":
+        import time
+        timestamp = time.strftime("%Y-%m-%d %H:%M")
+        new_ticket = {
+            "id": f"T{len(tickets) + 1:03d}",
+            "room": f"{session['student_logged_in']}",
+            "issue": request.form.get("issue", "No description"),
+            "reported": timestamp,
+            "status": "Open"
+        }
+        tickets.append(new_ticket)
+        
+        tickets_file.parent.mkdir(parents=True, exist_ok=True)
+        import csv
+        with open(tickets_file, 'w', newline='', encoding='utf-8') as f:
+            fieldnames = ["id", "room", "issue", "reported", "status"]
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(tickets)
+        
+        flash(f"✅ Your ticket T{new_ticket['id']} created!", "success")
+        log_event("STUDENT", f"{student_id} created maintenance ticket")
+        return redirect(url_for("student_maintenance"))
+    
+    return render_template("student_maintenance.html", tickets=tickets)
+
+@app.route("/student/assignment")
+@student_login_required
+def student_assignment_pdf():
+    student_id = session['student_logged_in']
+    students = load_students()
+    dorms = load_dorms()
+    
+    my_student = next((s for s in students if s.get("student_id") == student_id), None)
+    if not my_student:
+        flash("Student data not found!", "error")
+        return redirect(url_for("student_dashboard"))
+    
+    allocation = {}
+    if ALLOC_FILE.exists():
+        try:
+            allocations = read_csv(ALLOC_FILE)
+            allocation = {a["student_id"]: a["dorm_id"] for a in allocations}
+        except:
+            pass
+    
+    my_dorm = allocation.get(student_id, "On Waitlist")
+    dorm_name = next((d["name"] for d in dorms if d["dorm_id"] == my_dorm), my_dorm)
+    
+    buffer = BytesIO()
+    from reportlab.lib.pagesizes import A4
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+    import time  # ← FIXED: Use time instead of datetime
+    
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    story = []
+    styles = getSampleStyleSheet()
+    
+    title = Paragraph("🏠 DORM ASSIGNMENT LETTER", styles['Title'])
+    story.append(title)
+    story.append(Spacer(1, 12))
+    
+    # FIXED DATE FORMAT
+    date_str = time.strftime("%B %d, %Y")
+    info = Paragraph(f"""
+    <b>Student:</b> {my_student.get('name', 'N/A')} ({student_id})<br/>
+    <b>Academic Year:</b> {my_student.get('year', 'N/A')}<br/>
+    <b>Priority:</b> P{my_student.get('priority', '0')}<br/>
+    <b>Assignment:</b> {dorm_name}<br/>
+    <b>Date:</b> {date_str}
+    """, styles['Normal'])
+    story.append(info)
+    
+    doc.build(story)
+    buffer.seek(0)
+    
+    log_event("STUDENT", f"{student_id} downloaded assignment PDF")
+    return send_file(buffer, as_attachment=True, download_name=f"assignment_{student_id}.pdf")
+
+@app.route("/student/roommates")
+@student_login_required
+def student_roommates():
+    student_id = session['student_logged_in']
+    students = load_students()
+    dorms = load_dorms()
+    
+    allocation = {}
+    if ALLOC_FILE.exists():
+        try:
+            allocations = read_csv(ALLOC_FILE)
+            allocation = {a["student_id"]: a["dorm_id"] for a in allocations}
+        except:
+            pass
+    
+    my_dorm = allocation.get(student_id)
+    dorm_name = next((d["name"] for d in dorms if d["dorm_id"] == my_dorm), "No assignment")
+    
+    # Find dorm mates
+    dorm_mates = []
+    allocations_list = read_csv(ALLOC_FILE) if ALLOC_FILE.exists() else []
+    for alloc in allocations_list:
+        if alloc["dorm_id"] == my_dorm and alloc["student_id"] != student_id:
+            mate = next((s for s in students if s["student_id"] == alloc["student_id"]), None)
+            if mate:
+                dorm_mates.append(mate)
+    
+    log_event("STUDENT", f"{student_id} viewed roommates")
+    return render_template("student_roommates.html", 
+                         dorm_name=dorm_name, 
+                         dorm_mates=dorm_mates,
+                         student_id=student_id)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

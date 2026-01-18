@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.8rem; background: linear-gradient(135deg, white, rgba(255,255,255,0.8)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎓 Student Portal</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 1.3rem;">Welcome back, <strong>{{ student.name }}</strong> ({{ student.student_id }})</p>
+        <a href="{{ url_for('student_logout') }}" class="btn-primary" style="margin-top: 1rem;">🚪 Logout</a>
+    </div>
+
+    <!-- MY ASSIGNMENT -->
+    <div class="dashboard">
+        <div class="stat-card">
+            <h2>{{ dorm_name }}</h2>
+            <p><strong>My Dorm Assignment</strong></p>
+            {% if dorm_name == "⏳ On waitlist" %}
+                <p style="color: #fbbf24; font-weight: 600;">Priority: {{ student.priority }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="stat-card">
+            <h2>{{ roommate }}</h2>
+            <p><strong>My Roommate</strong></p>
+            {% if roommate == "None assigned" %}
+                <p style="color: #6b7280;">Solo room or pending</p>
+            {% endif %}
+        </div>
+        
+        <div class="stat-card">
+            <h2>{{ student.year }}</h2>
+            <p><strong>Academic Year</strong></p>
+        </div>
+        
+        <div class="stat-card">
+            <h2>P{{ student.priority }}</h2>
+            <p><strong>Priority Level</strong></p>
+        </div>
+    </div>
+
+    <!-- STUDENT-SPECIFIC ACTIONS (NEW!) -->
+<div class="quick-actions">
+    <a href="{{ url_for('student_maintenance') }}" class="btn-primary">🔧 Report Issue</a>
+    <a href="{{ url_for('student_assignment_pdf') }}" class="btn-primary">📄 My Assignment</a>
+    <a href="{{ url_for('student_roommates') }}" class="btn-primary">🤝 My Roommates</a>
+    <a href="{{ url_for('student_logout') }}" class="btn-primary" style="background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.3);">🚪 Logout</a>
+</div>
+
+</div>
+{% endblock %}

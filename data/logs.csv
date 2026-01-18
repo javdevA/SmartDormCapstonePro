@@ -112,3 +112,57 @@ timestamp,level,message
 2026-01-18T19:05:42,ADMIN,Ran allocation: Smart Greedy strategy
 2026-01-18T19:05:44,ADMIN,Compared allocation strategies
 2026-01-18T19:05:46,ADMIN,Ran simulation: 100 trials
+2026-01-18T23:37:18,ADMIN,Ran simulation: 100 trials
+2026-01-18T23:37:50,ADMIN,"Loaded sample data: 20 students, 5 dorms"
+2026-01-18T23:37:54,ADMIN,Viewed charts dashboard
+2026-01-18T23:37:59,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:38:17,ADMIN,Compared allocation strategies
+2026-01-18T23:38:35,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:38:45,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:38:49,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:38:57,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:39:00,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:39:03,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:39:05,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:39:07,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T23:39:11,ADMIN,Ran simulation: 100 trials
+2026-01-18T23:39:15,ADMIN,Ran simulation: 5 trials
+2026-01-18T23:39:19,ADMIN,Ran simulation: 50 trials
+2026-01-18T23:39:22,ADMIN,Ran simulation: 100 trials
+2026-01-18T23:39:25,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:26,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:27,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:28,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:29,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:29,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:31,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:32,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:39:33,ADMIN,Ran simulation: 1000 trials
+2026-01-18T23:40:40,ADMIN,Viewed charts dashboard
+2026-01-18T23:41:12,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-18T23:41:28,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-18T23:41:35,ADMIN,Generated official PDF report
+2026-01-18T23:42:06,ADMIN,Ran simulation: 100 trials
+2026-01-18T23:42:07,ADMIN,Ran simulation: 100 trials
+2026-01-18T23:42:08,ADMIN,Compared allocation strategies
+2026-01-19T00:34:44,ADMIN,Added student: Johnny Student (s1001)
+2026-01-19T00:34:59,STUDENT,s1001 viewed dashboard
+2026-01-19T00:46:33,STUDENT,s1001 viewed dashboard
+2026-01-19T00:53:28,STUDENT,s1001 viewed dashboard
+2026-01-19T00:55:30,STUDENT,s1001 created maintenance ticket
+2026-01-19T00:55:41,STUDENT,s1001 viewed dashboard
+2026-01-19T00:55:47,STUDENT,s1001 created maintenance ticket
+2026-01-19T00:55:59,STUDENT,s1001 viewed dashboard
+2026-01-19T00:56:38,STUDENT,s1001 viewed roommates
+2026-01-19T00:59:54,STUDENT,s1001 viewed dashboard
+2026-01-19T01:00:04,STUDENT,s1001 viewed dashboard
+2026-01-19T01:00:06,STUDENT,s1001 downloaded assignment PDF
+2026-01-19T01:00:16,STUDENT,s1001 viewed roommates
+2026-01-19T01:00:18,STUDENT,s1001 viewed dashboard
+2026-01-19T01:01:23,ADMIN,Added dorm: Kakaka (D6)
+2026-01-19T01:01:34,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-19T01:01:49,STUDENT,s1001 viewed dashboard
+2026-01-19T01:02:01,STUDENT,s1001 downloaded assignment PDF
+2026-01-19T01:02:16,STUDENT,s1001 viewed roommates
+2026-01-19T01:02:25,STUDENT,s1001 viewed dashboard
+2026-01-19T01:02:31,STUDENT,s1001 viewed dashboard
