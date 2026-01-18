@@ -19,3 +19,9 @@ timestamp,level,message
 2026-01-18T17:30:04,ADMIN,Viewed charts dashboard
 2026-01-18T17:30:06,ADMIN,Compared allocation strategies
 2026-01-18T17:30:09,ADMIN,Ran simulation: 100 trials
+2026-01-18T17:37:29,ADMIN,Viewed charts dashboard
+2026-01-18T17:37:40,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-18T17:37:41,ADMIN,Compared allocation strategies
+2026-01-18T17:37:43,ADMIN,Ran simulation: 100 trials
+2026-01-18T17:37:53,ADMIN,Viewed charts dashboard
+2026-01-18T17:37:55,ADMIN,Generated official PDF report
