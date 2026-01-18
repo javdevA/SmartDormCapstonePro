@@ -172,3 +172,15 @@ timestamp,level,message
 2026-01-19T01:09:41,ADMIN,Viewed waitlist: 0 students waiting
 2026-01-19T01:09:49,ADMIN,Deleted dorm: D6
 2026-01-19T01:10:00,ADMIN,Viewed charts dashboard
+2026-01-19T01:20:28,STUDENT,s1001 viewed dashboard
+2026-01-19T01:20:40,STUDENT,s1001 submitted room change request
+2026-01-19T01:20:43,STUDENT,s1001 viewed dashboard
+2026-01-19T01:21:38,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-19T01:21:41,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-19T01:21:47,ADMIN,Generated official PDF report
+2026-01-19T01:21:54,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-19T01:21:55,ADMIN,Compared allocation strategies
+2026-01-19T01:21:56,ADMIN,Ran simulation: 100 trials
+2026-01-19T01:21:59,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-19T01:22:10,ADMIN,Viewed charts dashboard
+2026-01-19T01:22:17,ADMIN,Generated official PDF report
