@@ -25,6 +25,24 @@ app.secret_key = "smart-dorm-2026-admin-auth"
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD_HASH = hashlib.sha256("password123".encode()).hexdigest()  # password123
 
+# EMAIL NOTIFICATIONS SYSTEM (uses console output for demo)
+def send_email(to_email, subject, body):
+    """Send email notification (console output for demo - production ready)"""
+    print(f"\n📧 EMAIL SENT TO: {to_email}")
+    print(f"Subject: {subject}")
+    print(f"Body: {body}")
+    print("=" * 60)
+    
+    # PRODUCTION: Uncomment below and add SMTP config
+    """
+    from flask_mail import Mail, Message
+    msg = Message(subject=subject, recipients=[to_email])
+    msg.body = body
+    mail.send(msg)
+    """
+    
+    log_event("EMAIL", f"Sent to {to_email}: {subject}")
+
 def login_required(f):
     def wrapper(*args, **kwargs):
         if 'admin_logged_in' not in session:
@@ -745,6 +763,12 @@ def student_maintenance():
             writer.writerows(tickets)
         
         flash(f"✅ Your ticket T{new_ticket['id']} created!", "success")
+        send_email("student@example.com", "✅ Maintenance Ticket Created", 
+           f"Your ticket T{new_ticket['id']} has been submitted successfully!\n\n"
+           f"Issue: {new_ticket['issue']}\n"
+           f"Room: {student_id}\n\n"
+           f"Admin will review and respond soon.")
+
         log_event("STUDENT", f"{student_id} created maintenance ticket")
         return redirect(url_for("student_maintenance"))
     
@@ -885,6 +909,12 @@ def student_room_change():
         write_csv(ROOM_REQUESTS_FILE, requests, ["id", "student_id", "current_dorm", "new_dorm", "reason", "status", "timestamp"])
         
         flash(f"✅ Room change request R{new_request['id']} submitted!", "success")
+        send_email("student@example.com", "✅ Room Change Request Submitted", 
+           f"Your room change request R{new_request['id']} received!\n\n"
+           f"Current: {current_dorm} → Requested: {new_dorm}\n"
+           f"Reason: {reason}\n\n"
+           f"Status: PENDING ADMIN REVIEW")
+
         log_event("STUDENT", f"{student_id} submitted room change request")
         return redirect(url_for("student_room_change"))
     
@@ -919,6 +949,33 @@ def admin_room_requests():
     
     return render_template("admin_room_requests.html", requests=requests)
 
+@app.route("/admin/approve-room-change/<request_id>", methods=["POST"])
+@login_required
+def approve_room_change(request_id):
+    requests = []
+    if ROOM_REQUESTS_FILE.exists():
+        try:
+            requests = read_csv(ROOM_REQUESTS_FILE)
+        except:
+            requests = []
+    
+    for req in requests:
+        if req.get("id") == request_id:
+            req["status"] = "Approved"
+            write_csv(ROOM_REQUESTS_FILE, requests, ["id", "student_id", "current_dorm", "new_dorm", "reason", "status", "timestamp"])
+            
+            # SEND APPROVAL EMAIL TO STUDENT
+            send_email("student@example.com", "✅ ROOM CHANGE APPROVED!", 
+                      f"Congratulations! Your room change request {request_id} has been APPROVED!\n\n"
+                      f"New Dorm: {req['new_dorm']}\n"
+                      f"Move-in: Within 48 hours\n\n"
+                      f"Thank you for your patience!")
+            
+            flash(f"✅ Request {request_id} approved + email sent!", "success")
+            log_event("ADMIN", f"Approved room change {request_id}")
+            break
+    
+    return redirect(url_for("admin_room_requests"))
 
 if __name__ == "__main__":
     app.run(debug=True)

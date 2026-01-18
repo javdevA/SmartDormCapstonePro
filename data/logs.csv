@@ -184,3 +184,16 @@ timestamp,level,message
 2026-01-19T01:21:59,ADMIN,Viewed waitlist: 0 students waiting
 2026-01-19T01:22:10,ADMIN,Viewed charts dashboard
 2026-01-19T01:22:17,ADMIN,Generated official PDF report
+2026-01-19T01:36:11,STUDENT,s1001 viewed dashboard
+2026-01-19T01:36:27,EMAIL,Sent to student@example.com: ✅ Room Change Request Submitted
+2026-01-19T01:36:27,STUDENT,s1001 submitted room change request
+2026-01-19T01:37:09,EMAIL,Sent to student@example.com: ✅ ROOM CHANGE APPROVED!
+2026-01-19T01:37:09,ADMIN,Approved room change R001
+2026-01-19T01:37:11,EMAIL,Sent to student@example.com: ✅ ROOM CHANGE APPROVED!
+2026-01-19T01:37:11,ADMIN,Approved room change R002
+2026-01-19T01:37:19,ADMIN,Compared allocation strategies
+2026-01-19T01:37:22,ADMIN,Generated official PDF report
+2026-01-19T01:37:50,ADMIN,Viewed roommate matches: 10 pairs found
+2026-01-19T01:37:56,ADMIN,Viewed waitlist: 0 students waiting
+2026-01-19T01:37:59,ADMIN,Ran allocation: Smart Greedy strategy
+2026-01-19T01:38:02,ADMIN,Ran simulation: 100 trials
