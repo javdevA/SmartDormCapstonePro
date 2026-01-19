@@ -7,8 +7,8 @@
 ### ADMIN PORTAL
 admin / password123
 
-| Feature | Status |
-|---------|--------|
+| Feature | 
+|---------|
 | 🔐 Secure Login + Logs 
 | 📊 Live Analytics Dashboard 
 | 👥 Student CRUD 
@@ -23,8 +23,8 @@ admin / password123
 ### STUDENT SELF-SERVICE
 s1001 / student123
 
-| Feature | Status |
-|---------|--------|
+| Feature | 
+|---------|
 | ✅ Personal Assignment View 
 | 👥 Dorm Roommate Info 
 | 🔧 Maintenance Requests 
