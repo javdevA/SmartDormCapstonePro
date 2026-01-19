@@ -197,3 +197,8 @@ timestamp,level,message
 2026-01-19T01:37:56,ADMIN,Viewed waitlist: 0 students waiting
 2026-01-19T01:37:59,ADMIN,Ran allocation: Smart Greedy strategy
 2026-01-19T01:38:02,ADMIN,Ran simulation: 100 trials
+2026-01-19T02:09:52,STUDENT,s1001 viewed dashboard
+2026-01-19T02:09:59,EMAIL,Sent to student@example.com: ✅ Room Change Request Submitted
+2026-01-19T02:09:59,STUDENT,s1001 submitted room change request
+2026-01-19T02:10:10,EMAIL,Sent to student@example.com: ✅ ROOM CHANGE APPROVED!
+2026-01-19T02:10:10,ADMIN,Approved room change R003

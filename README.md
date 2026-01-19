@@ -9,28 +9,28 @@ admin / password123
 
 | Feature | Status |
 |---------|--------|
-| 🔐 Secure Login + Logs | ✅ |
-| 📊 Live Analytics Dashboard | ✅ |
-| 👥 Student CRUD | ✅ |
-| 🏢 Dorm Management | ✅ |
-| 🚀 3 Algorithms (85% satisfaction) | ✅ |
-| 🤝 AI Roommates (92% accuracy) | ✅ |
-| 🔧 Maintenance Tickets | ✅ |
-| ⏳ Priority Waitlist | ✅ |
-| 📄 Official PDF Reports | ✅ |
-| 🔄 Room Change Approvals | ✅ **NEW** |
+| 🔐 Secure Login + Logs 
+| 📊 Live Analytics Dashboard 
+| 👥 Student CRUD 
+| 🏢 Dorm Management 
+| 🚀 3 Algorithms (85% satisfaction) 
+| 🤝 AI Roommates (92% accuracy) 
+| 🔧 Maintenance Tickets
+| ⏳ Priority Waitlist 
+| 📄 Official PDF Reports 
+| 🔄 Room Change Approvals 
 
 ### STUDENT SELF-SERVICE
 s1001 / student123
 
 | Feature | Status |
 |---------|--------|
-| ✅ Personal Assignment View | ✅ |
-| 👥 Dorm Roommate Info | ✅ |
-| 🔧 Maintenance Requests | ✅ |
-| 📄 Personal PDF Download | ✅ |
-| 🔄 Room Change Requests | ✅ **NEW** |
-| 🌙 Dark Mode Toggle | ✅ **NEW** |
+| ✅ Personal Assignment View 
+| 👥 Dorm Roommate Info 
+| 🔧 Maintenance Requests 
+| 📄 Personal PDF Download 
+| 🔄 Room Change Requests 
+| 🌙 Dark Mode Toggle 
 
 ## QUICK START (30 seconds)
 ```bash
